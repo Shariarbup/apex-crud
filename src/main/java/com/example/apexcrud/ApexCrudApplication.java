@@ -1,5 +1,6 @@
 package com.example.apexcrud;
 
+import com.example.apexcrud.enums.RoleType;
 import com.example.apexcrud.model.Role;
 import com.example.apexcrud.repositories.RoleRepository;
 import com.example.apexcrud.utils.AppConstants;
@@ -38,18 +39,20 @@ public class ApexCrudApplication  implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println(this.passwordEncoder.encode("xyz"));
         try{
-            Role role = new Role();
-            role.setId(AppConstants.ROLE_ADMIN);
-            role.setName("ROLE_ADMIN");
+            Role role = Role.builder()
+                    .id(AppConstants.ROLE_ADMIN)
+                    .role(RoleType.ROLE_ADMIN)
+                    .build();
 
-            Role role1 = new Role();
-            role1.setId(AppConstants.ROLE_NORMAL);
-            role1.setName("ROLE_NORMAL");
+            Role role1 = Role.builder()
+                    .id(AppConstants.ROLE_USER)
+                    .role(RoleType.ROLE_USER)
+                    .build();
 
             List<Role> roles = List.of(role, role1);
             List<Role> resultRoles = this.roleRepository.saveAll(roles);
             resultRoles.forEach(r->{
-                System.out.println(r.getName());
+                System.out.println(r.getRole().name());
             });
         }catch (Exception e){
             e.printStackTrace();

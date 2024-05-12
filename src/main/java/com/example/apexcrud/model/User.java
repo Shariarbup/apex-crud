@@ -55,7 +55,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotEmpty
-    @Size(min=1, max = 50, message = "Password must be min of 1 chars and max of 50 characters")
+    @Size(min=1, max = 255, message = "Password must be min of 1 chars and max of 50 characters")
     @Column(name = "password")
     private String password;
 
@@ -80,7 +80,7 @@ public class User implements UserDetails {
 
     @CreatedBy
     @Column(
-            nullable = false,
+            nullable = true,
             updatable = false
     )
     private Long createdBy;
@@ -94,7 +94,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        List<SimpleGrantedAuthority> authorities = this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getRole().name())).collect(Collectors.toList());
         return authorities;
     }
 

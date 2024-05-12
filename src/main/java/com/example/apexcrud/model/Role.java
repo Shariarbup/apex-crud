@@ -1,9 +1,7 @@
 package com.example.apexcrud.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.apexcrud.enums.RoleType;
+import lombok.*;
 
 import jakarta.persistence.*;
 
@@ -13,8 +11,11 @@ import jakarta.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Role {
     @Id
     private Long id;
-    private String name;
+    
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
 }

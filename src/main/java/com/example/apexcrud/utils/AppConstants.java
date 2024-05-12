@@ -7,5 +7,5 @@ public class AppConstants {
     public static final String SORT_DIR="asc";
 
     public static final Long ROLE_ADMIN = 501L;
-    public static final Long ROLE_NORMAL = 502L;
+    public static final Long ROLE_USER = 502L;
 }

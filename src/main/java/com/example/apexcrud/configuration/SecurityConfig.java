@@ -31,7 +31,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     public static final String[] PUBLIC_URLS = {
-            "/api/v1/auth/**",
             "/v3/api-docs",
             "/v2/api-docs",
             "/swagger-resources/**",
@@ -54,6 +53,8 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests(auth->auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/v1/**").authenticated()
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers(HttpMethod.GET).permitAll()
                         .anyRequest()

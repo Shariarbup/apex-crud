@@ -23,21 +23,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
-@Tag(name = "AuthController", description = "This is Authcontroller")
+@RequestMapping("/api")
+@Tag(name = "AuthController", description = "AUTHENTICATION AND AUTHORIZATION API")
 @SecurityRequirement(name="Bearer Authentication")
 public class AuthController {
+
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
+
     @Autowired
     private UserDetailsService userDetailsService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/auth/login", consumes = "application/json")
+    @PostMapping(value = "/auth/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JwtAuthResponse> createToken(
             @RequestBody JwtAuthRequest request
     ) throws Exception {
@@ -47,7 +50,7 @@ public class AuthController {
         String token = this.jwtTokenHelper.generateToken(userDetails);
         JwtAuthResponse response = new JwtAuthResponse();
         response.setToken(token);
-        return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private void authenticate(String username, String password) throws Exception {
@@ -62,9 +65,9 @@ public class AuthController {
     }
 
     //register
-    @PostMapping("/auth/register")
-    public ResponseEntity<UserDto> registeruser(@RequestBody UserDto userDto){
-        UserDto registereduser = this.userService.registerNewUser(userDto);
-        return new ResponseEntity<UserDto>(registereduser, HttpStatus.CREATED);
+    @PostMapping(value = "/auth/register", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+        UserDto registeredUser = this.userService.registerNewUser(userDto);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 }
