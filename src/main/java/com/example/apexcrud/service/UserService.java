@@ -1,5 +1,6 @@
 package com.example.apexcrud.service;
 
+import com.example.apexcrud.dto.RoleListDto;
 import com.example.apexcrud.dto.UserDto;
 import com.example.apexcrud.dto.UserFilterCriteria;
 import com.example.apexcrud.dto.UserFilterRequestDTO;
@@ -22,4 +23,6 @@ public interface UserService {
     void deleteUser(Long userId);
 
     Page<UserDto> findUsersWithFilter(Pageable pageable, UserFilterCriteria userFilterCriteria);
+
+    String changeUserRole(Long userId, RoleListDto roleListDto);
 }

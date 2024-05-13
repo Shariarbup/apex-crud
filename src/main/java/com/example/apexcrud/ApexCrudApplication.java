@@ -37,7 +37,6 @@ public class ApexCrudApplication  implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(this.passwordEncoder.encode("xyz"));
         try{
             Role role = Role.builder()
                     .id(AppConstants.ROLE_ADMIN)
@@ -50,10 +49,7 @@ public class ApexCrudApplication  implements CommandLineRunner {
                     .build();
 
             List<Role> roles = List.of(role, role1);
-            List<Role> resultRoles = this.roleRepository.saveAll(roles);
-            resultRoles.forEach(r->{
-                System.out.println(r.getRole().name());
-            });
+            this.roleRepository.saveAll(roles);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 public class PaginationUtil {
+
     public static Pageable buildPageable(Integer page, Integer size, String sortBy, String sortOrder) {
         // Default values if parameters are null or empty
         int pageNumber = page != null ? page : 0;

@@ -1,9 +1,6 @@
 package com.example.apexcrud.controller;
 
-import com.example.apexcrud.dto.ApiResponse;
-import com.example.apexcrud.dto.UserDto;
-import com.example.apexcrud.dto.UserFilterCriteria;
-import com.example.apexcrud.dto.UserFilterRequestDTO;
+import com.example.apexcrud.dto.*;
 import com.example.apexcrud.service.UserService;
 import com.example.apexcrud.utils.PaginationUtil;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -64,8 +61,14 @@ public class UserController {
                                                             @ParameterObject UserFilterCriteria userFilterCriteria){
 
         Pageable pageable = PaginationUtil.buildPageable(page, size, sortBy, sortOrder);
-        System.out.println("I am in controller");
         return ResponseEntity.ok(userService.findUsersWithFilter(pageable, userFilterCriteria));
+    }
+
+    @GetMapping(value = "/users/changeRole/{userId}", produces = "application/json")
+    public ResponseEntity<String> changeUserRole(@PathVariable Long userId,
+                                                            @ParameterObject RoleListDto roleListDto){
+
+        return ResponseEntity.ok(userService.changeUserRole(userId, roleListDto));
     }
 
 }

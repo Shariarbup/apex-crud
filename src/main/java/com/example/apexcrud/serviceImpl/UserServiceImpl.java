@@ -1,10 +1,7 @@
 package com.example.apexcrud.serviceImpl;
 
 
-import com.example.apexcrud.dto.UserDto;
-import com.example.apexcrud.dto.UserFilterCriteria;
-import com.example.apexcrud.dto.UserFilterRequest;
-import com.example.apexcrud.dto.UserFilterRequestDTO;
+import com.example.apexcrud.dto.*;
 import com.example.apexcrud.exceptions.ApiException;
 import com.example.apexcrud.exceptions.ResourceNotFoundException;
 import com.example.apexcrud.model.Role;
@@ -19,12 +16,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -109,10 +105,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserDto> findUsersWithFilter(Pageable pageable, UserFilterCriteria userFilterCriteria) {
         UserFilterRequest userFilterRequest = buildUserFilterRequest(userFilterCriteria);
-        System.out.println("I am in impl");
         Page<User> userPage = userRepository.findAll(userSpecification.getUserSpecification(userFilterRequest.getFilters()), pageable);
-        System.out.println("Use page"+ userPage.getContent());
         return userPage.map(UserServiceImpl::userToDto);
+    }
+
+    @Override
+    public String changeUserRole(Long userId, RoleListDto roleListDto) {
+        User user = userRepository.findByUserId(userId.toString()).orElseThrow(()->new ResourceNotFoundException("User", "id", userId));
+        if (user != null) {
+            Set<Role> roles = user.getRoles();
+            roles.clear();
+            try {
+                List<Role> listOfRole = roleRepository.findAllByRoleIn(roleListDto.getRoleTypeList());
+                user.setRoles(new HashSet<>(listOfRole));
+                userRepository.save(user);
+                return "User role Updated";
+            } catch (IllegalArgumentException e) {
+                throw new ApiException(e.getMessage());
+            }
+        } else {
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
+
     }
 
     private User dtoToUser(UserDto userDto){
