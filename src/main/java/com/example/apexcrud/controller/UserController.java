@@ -10,7 +10,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,10 +34,10 @@ public class UserController {
     //Admin
     //DELETE - delete user
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId){
-        userService.deleteUser(userId);
-        return new ResponseEntity(new ApiResponse("User Deleted Successfully", true),HttpStatus.OK);
+    @PutMapping("/users/deActivation/{userId}")
+    public ResponseEntity<UserDto> deleteUser(@PathVariable Long userId){
+        UserDto userDto = userService.deActivateUser(userId);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     //GET - get user

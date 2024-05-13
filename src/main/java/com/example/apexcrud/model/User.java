@@ -1,5 +1,6 @@
 package com.example.apexcrud.model;
 
+import com.example.apexcrud.enums.ActiveStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -58,6 +59,10 @@ public class User implements UserDetails {
     @Size(min=1, max = 255, message = "Password must be min of 1 chars and max of 50 characters")
     @Column(name = "password")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ActiveStatus status = ActiveStatus.ACTIVE;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(

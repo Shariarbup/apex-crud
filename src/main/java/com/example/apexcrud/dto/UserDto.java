@@ -1,5 +1,6 @@
 package com.example.apexcrud.dto;
 
+import com.example.apexcrud.enums.ActiveStatus;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -34,6 +35,8 @@ public class UserDto {
 
     @Size(max = 255, message = "DeptmsCode must be min of 1 chars and max of 255 characters")
     private String deptmsCode;
+
+    private ActiveStatus status;
 
     private Set<RoleDto> roles = new HashSet<>();
 }

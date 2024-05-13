@@ -2,6 +2,7 @@ package com.example.apexcrud.serviceImpl;
 
 
 import com.example.apexcrud.dto.*;
+import com.example.apexcrud.enums.ActiveStatus;
 import com.example.apexcrud.exceptions.ApiException;
 import com.example.apexcrud.exceptions.ResourceNotFoundException;
 import com.example.apexcrud.model.Role;
@@ -57,6 +58,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = this.roleRepository.findById(AppConstants.ROLE_USER).get();
             user.getRoles().add(role);
+            user.setStatus(ActiveStatus.ACTIVE);
             User newUser = this.userRepository.save(user);
             return this.modelMapper.map(newUser, UserDto.class);
         } else {
@@ -79,6 +81,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setDeptmsCode(userDto.getDeptmsCode());
+        user.setStatus(userDto.getStatus());
         User userUpdate = userRepository.save(user);
         return userToDto(userUpdate);
     }
@@ -97,9 +100,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public UserDto deActivateUser(Long userId) {
         User user = userRepository.findByUserId(userId.toString()).orElseThrow(()->new ResourceNotFoundException("User", "id", userId));
-        userRepository.delete(user);
+        user.setStatus(ActiveStatus.DEACTIVE);
+        User saveUser = userRepository.save(user);
+        return this.modelMapper.map(saveUser, UserDto.class);
     }
 
     @Override
@@ -141,6 +146,7 @@ public class UserServiceImpl implements UserService {
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setDeptmsCode(user.getDeptmsCode());
+        userDto.setStatus(user.getStatus());
         return userDto;
     }
 
