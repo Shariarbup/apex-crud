@@ -27,33 +27,33 @@ public class UserController {
 
     //PUT - update user
     @PutMapping("/users/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId,@Valid @RequestBody UserDto userDto){
-        UserDto updateUserDto = userService.updateUser(userDto,userId);
+    public ResponseEntity<UserDtoResponse> updateUser(@PathVariable Long userId,@Valid @RequestBody UserDto userDto){
+        UserDtoResponse updateUserDto = userService.updateUser(userDto,userId);
         return ResponseEntity.ok(updateUserDto);
     }
     //Admin
     //DELETE - delete user
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/users/deActivation/{userId}")
-    public ResponseEntity<UserDto> deleteUser(@PathVariable Long userId){
-        UserDto userDto = userService.deActivateUser(userId);
+    public ResponseEntity<UserDtoResponse> deleteUser(@PathVariable Long userId){
+        UserDtoResponse userDto = userService.deActivateUser(userId);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     //GET - get user
     @GetMapping(value = "/users", produces = "application/json")
-    public ResponseEntity<List<UserDto>> getAllusers(){
+    public ResponseEntity<List<UserDtoResponse>> getAllusers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
 
     @GetMapping(value = "/users/{userId}", produces = "application/json")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId){
+    public ResponseEntity<UserDtoResponse> getUserById(@PathVariable Long userId){
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 
     @GetMapping(value = "/users/filter", produces = "application/json")
-    public ResponseEntity<Page<UserDto>> getUsersWithFilter(@RequestParam(defaultValue = "0") Integer page,
+    public ResponseEntity<Page<UserDtoResponse>> getUsersWithFilter(@RequestParam(defaultValue = "0") Integer page,
                                                             @RequestParam(defaultValue = "10") Integer size,
                                                             @RequestParam(defaultValue = "id") String sortBy,
                                                             @RequestParam(defaultValue = "asc") String sortOrder,

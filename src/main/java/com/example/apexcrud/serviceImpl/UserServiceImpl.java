@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     private UserSpecification userSpecification;
 
     @Override
-    public UserDto registerNewUser(UserDto userDto) {
+    public UserDtoResponse registerNewUser(UserDto userDto) {
         if (userDto.getUserId() != null) {
             var userDb = userRepository.findByUserId(userDto.getUserId().toString()).orElse(null);
             if (userDb != null) {
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             user.getRoles().add(role);
             user.setStatus(ActiveStatus.ACTIVE);
             User newUser = this.userRepository.save(user);
-            return this.modelMapper.map(newUser, UserDto.class);
+            return this.modelMapper.map(newUser, UserDtoResponse.class);
         } else {
             throw new ApiException("UserId cannot be null");
         }
@@ -75,43 +75,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Long userId) {
+    public UserDtoResponse updateUser(UserDto userDto, Long userId) {
         User user = userRepository.findByUserId(userId.toString()).orElseThrow(()->new ResourceNotFoundException("User", "id", userId));
         user.setUserName(userDto.getUserName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setDeptmsCode(userDto.getDeptmsCode());
         user.setStatus(userDto.getStatus());
         User userUpdate = userRepository.save(user);
-        return userToDto(userUpdate);
+        return this.modelMapper.map(userUpdate, UserDtoResponse.class);
     }
 
     @Override
-    public UserDto getUserById(Long userId) {
+    public UserDtoResponse getUserById(Long userId) {
         User user = userRepository.findByUserId(userId.toString().trim()).orElseThrow(()->new ResourceNotFoundException("User", "id", userId));
-        return userToDto(user);
+        return this.modelMapper.map(user, UserDtoResponse.class);
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserDtoResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
-        List<UserDto> userDtos = users.stream().map(user -> userToDto(user)).collect(Collectors.toList());
+        List<UserDtoResponse> userDtos = users.stream().map(user -> {
+            return this.modelMapper.map(user, UserDtoResponse.class);
+        }).collect(Collectors.toList());
         return userDtos;
     }
 
     @Override
-    public UserDto deActivateUser(Long userId) {
+    public UserDtoResponse deActivateUser(Long userId) {
         User user = userRepository.findByUserId(userId.toString()).orElseThrow(()->new ResourceNotFoundException("User", "id", userId));
         user.setStatus(ActiveStatus.DEACTIVE);
         User saveUser = userRepository.save(user);
-        return this.modelMapper.map(saveUser, UserDto.class);
+        return this.modelMapper.map(saveUser, UserDtoResponse.class);
     }
 
     @Override
-    public Page<UserDto> findUsersWithFilter(Pageable pageable, UserFilterCriteria userFilterCriteria) {
+    public Page<UserDtoResponse> findUsersWithFilter(Pageable pageable, UserFilterCriteria userFilterCriteria) {
         UserFilterRequest userFilterRequest = buildUserFilterRequest(userFilterCriteria);
         Page<User> userPage = userRepository.findAll(userSpecification.getUserSpecification(userFilterRequest.getFilters()), pageable);
-        return userPage.map(UserServiceImpl::userToDto);
+        return userPage.map(user -> modelMapper.map(user, UserDtoResponse.class));
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.example.apexcrud.configuration.securityHelper.JwtTokenHelper;
 import com.example.apexcrud.dto.JwtAuthRequest;
 import com.example.apexcrud.dto.JwtAuthResponse;
 import com.example.apexcrud.dto.UserDto;
+import com.example.apexcrud.dto.UserDtoResponse;
 import com.example.apexcrud.exceptions.ApiException;
 import com.example.apexcrud.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -66,8 +67,8 @@ public class AuthController {
 
     //register
     @PostMapping(value = "/auth/register", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
-        UserDto registeredUser = this.userService.registerNewUser(userDto);
+    public ResponseEntity<UserDtoResponse> registerUser(@RequestBody UserDto userDto){
+        UserDtoResponse registeredUser = this.userService.registerNewUser(userDto);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 }
