@@ -37,6 +37,4 @@ public class UserDto {
     private String deptmsCode;
 
     private ActiveStatus status;
-
-    private Set<RoleDto> roles = new HashSet<>();
 }
