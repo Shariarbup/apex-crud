@@ -10,4 +10,5 @@ Please visit - http://localhost:8082/swagger-ui/index.html
 
 - Here you can find all API
 - Login and Registration API didn't need any authentication But Other API need authentication for access it
+- For Accessing other API we need authorize using token, which we get after successfull login
 
