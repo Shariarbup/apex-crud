@@ -1,8 +1,9 @@
 # PROJECT DEPENDENCY
 - JAVA 17
 - SPRING BOOT VERSION 3.2.5
-- LOcal Server port: 8082
+- LOcal Server port: 8087
 - Database: MYSQL
+- Database name: apex_crud
 
 # After running my application in an IDE
 
